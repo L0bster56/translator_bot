@@ -5,12 +5,10 @@ from services.base_meneger import BaseMenager
 class UserMenager(BaseMenager):
     def create(self, **kwargs):
         response = requests.post(
-            url=self.url+"Telegram_user",
+            url=self.url + "Telegram_user",
             headers=self.headers,
             json=kwargs
         )
-        print(response.json())
-        # return respons.json()
 
     def get(self, obj_id):
         response = requests.get(

@@ -10,10 +10,9 @@ class HistoryMenager(BaseMenager):
             json=kwargs
         )
 
-
     def list(self, **kwargs):
         response = requests.get(
-            url=self.url+f"history?user_id=eq.{kwargs["user_id"]}",
+            url=self.url + f"history?user_id=eq.{kwargs['user_id']}",
             headers=self.headers,
         )
         return response.json()

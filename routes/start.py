@@ -14,6 +14,6 @@ manager = UserMenager()
 async def start_handler(message: Message, state: FSMContext):
     user = manager.get(obj_id=message.from_user.id)
     if user is None:
-        manager.create(id=message.from_user.id, fullname=message.from_user.full_name, language=message.from_user.language_code)
+        manager.create(id=message.from_user.id, full_name=message.from_user.full_name, lang=message.from_user.language_code)
     await state.clear()
     await message.answer("hello", reply_markup=get_start_kb())

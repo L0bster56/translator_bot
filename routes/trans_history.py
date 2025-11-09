@@ -19,9 +19,14 @@ router = Router()
 
 @router.message(F.text == "📚 история")
 async def translate_handler(message: Message):
-    text = f"История поиска {message.from_user.first_name}"
+    texts = f"История поиска {message.from_user.first_name}:\n\n"
     lists = menager.list(user_id=message.from_user.id)
+
     print(lists)
-    for text in lists:
-        text += f"\n{text.src} <-> {text.text} == {text.trans_text} <-> {text.dest}"
-    await message.answer(text)
+
+    for item in lists:
+        texts += f"{item['src']} → {item['dest']} | {item['text']} = {item['trans_text']}\n"
+
+
+
+    await message.answer(texts)
