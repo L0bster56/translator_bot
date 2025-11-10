@@ -5,6 +5,9 @@ from aiogram.client.default import DefaultBotProperties
 
 from configs import TOKEN, i18n
 
+from midlewares.auth import AuthMiddleware
+from midlewares.logging import LoggingMiddleware
+
 from routes.start import router as start_handler
 from routes.about import router as about_handler
 from routes.settings import router as settings_handler
@@ -18,7 +21,14 @@ properties = DefaultBotProperties(
 bot = Bot(TOKEN, default=properties)
 dp = Dispatcher()
 
+
 dp.message.middleware(FSMI18nMiddleware(i18n))
+
+dp.message.middleware(LoggingMiddleware())
+dp.callback_query(LoggingMiddleware())
+dp.message.middleware(AuthMiddleware())
+dp.callback_query.middleware(AuthMiddleware())
+
 dp.include_router(start_handler)
 dp.include_router(about_handler)
 dp.include_router(settings_handler)
