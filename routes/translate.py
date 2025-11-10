@@ -54,7 +54,7 @@ async def to_lang_handler(cb: CallbackQuery, state: FSMContext):
         src=data.get("from_lang"),
         dest=data.get("to_lang"),
         text=data.get("text"),
-        trans_text=result,
+        translated_text=result,
         user_id=cb.from_user.id
     )
     

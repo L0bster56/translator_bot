@@ -4,18 +4,17 @@ from aiogram.types import Message, CallbackQuery
 
 from states.translate import TransForm
 
-from keyboards.translate import get_from_lang_kb,get_to_lang_kb
+from keyboards.translate import get_from_lang_kb, get_to_lang_kb
 from keyboards.start import get_back_kb, get_start_kb
 
 from services.translate import translate
 
 from services.history import HistoryMenager
 
-
-
 menager = HistoryMenager()
 
 router = Router()
+
 
 @router.message(F.text == "📚 история")
 async def translate_handler(message: Message):
@@ -25,8 +24,10 @@ async def translate_handler(message: Message):
     print(lists)
 
     for item in lists:
-        texts += f"{item['src']} → {item['dest']} | {item['text']} = {item['trans_text']}\n"
-
-
-
+        texts += f"{item['src']} → {item['dest']} | {item['text']} = {item['translated_text']}\n"
+    if len(lists) <= 0:
+        await message.answer(
+            "У вас истории нету"
+        )
+        return
     await message.answer(texts)

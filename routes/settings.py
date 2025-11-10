@@ -9,3 +9,5 @@ router = Router()
 async def send_welcome(message: Message):
     await message.answer("настройки", reply_markup=get_back_kb())
     await message.answer("выберите язык", reply_markup=get_lang_kb())
+
+
