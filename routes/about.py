@@ -1,10 +1,12 @@
 from aiogram import Router, F
 from aiogram.types import Message
 
+from configs import __, _
+
 router = Router()
 
-@router.message(F.text == "👥 о нас")
-async def start_handler(message: Message):
+@router.message(F.text.in_(__("👥 о нас")) )
+async def start_handler(message: Message,user: dict):
     text="""
     <b>🧠О нас </b>
 Добро пожаловать! 👋
@@ -16,4 +18,4 @@ async def start_handler(message: Message):
 📫 <b>Email:</b> malikarakh07@gmail.com 
     """
 
-    await message.answer(text)
+    await message.answer(_(text, locale=user.get("lang")))

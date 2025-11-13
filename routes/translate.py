@@ -11,42 +11,42 @@ from services.translate import translate
 
 from services.history import HistoryMenager
 
-
+from configs import __, _
 
 menager = HistoryMenager()
 
 router = Router()
 
-@router.message(F.text == "🔍 перевод")
-async def search_handler(message: Message, state: FSMContext):
-    await message.answer("ПЕРЕВОД",  reply_markup=get_back_kb())
-    await message.answer("с какого языка вы хотите перевести", reply_markup=get_from_lang_kb())
+@router.message(F.text.in_(__("🔍 перевод")) )
+async def search_handler(message: Message, state: FSMContext, user: dict):
+    await message.answer(_("ПЕРЕВОД", locale=user.get("lang")),  reply_markup=get_back_kb())
+    await message.answer(_("с какого языка вы хотите перевести", locale=user.get("lang")), reply_markup=get_from_lang_kb())
     await state.set_state(TransForm.from_lang)
 
 @router.callback_query(F.data.startswith("from_lang_"), TransForm.from_lang)
-async def from_lang_handler(cb: CallbackQuery, state: FSMContext):
-    _, _, from_lang = cb.data.split("_")
+async def from_lang_handler(cb: CallbackQuery, state: FSMContext, user: dict):
+    a, b, from_lang = cb.data.split("_")
     await state.update_data(from_lang=from_lang)
 
     await state.set_state(TransForm.trans_text)
-    await cb.message.answer("введите текст который хотите перевести")
+    await cb.message.answer(_("введите текст который хотите перевести", locale=user.get("lang")))
 
 
 @router.message(F.text, TransForm.trans_text)
-async def trans_text_handler(message: Message, state: FSMContext):
+async def trans_text_handler(message: Message, state: FSMContext, user: dict):
     text = message.text
     await state.update_data(text=text)
 
     await state.set_state(TransForm.to_lang)
-    await message.answer("на какой язык вы хотите перевести", reply_markup=get_to_lang_kb())
+    await message.answer(_("на какой язык вы хотите перевести",locale=user.get("lang")), reply_markup=get_to_lang_kb())
 
 
 @router.callback_query(F.data.startswith("to_lang_"), TransForm.to_lang)
-async def to_lang_handler(cb: CallbackQuery, state: FSMContext):
-    _, _, to_lang = cb.data.split("_")
+async def to_lang_handler(cb: CallbackQuery, state: FSMContext, user: dict):
+    b, a, to_lang = cb.data.split("_")
     await state.update_data(to_lang=to_lang)
 
-    await cb.message.answer("результат", reply_markup=get_start_kb())
+    await cb.message.answer(_("результат", locale=user.get("lang")), reply_markup=get_start_kb())
     data = await state.get_data()
     result = translate(data.get("from_lang"), data.get("text"), data.get("to_lang"))
 
@@ -54,7 +54,7 @@ async def to_lang_handler(cb: CallbackQuery, state: FSMContext):
         src=data.get("from_lang"),
         dest=data.get("to_lang"),
         text=data.get("text"),
-        translated_text=result,
+        trans_text=result,
         user_id=cb.from_user.id
     )
     

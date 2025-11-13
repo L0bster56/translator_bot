@@ -16,3 +16,5 @@ i18n = I18n(path="locales", domain="messages")
 
 # Функция для перевода
 _ = i18n.gettext
+
+__ = lambda s: [_(s, locale="ru"),_(s, locale="en"),_(s, locale="uz")]

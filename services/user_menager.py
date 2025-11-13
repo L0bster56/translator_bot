@@ -5,7 +5,7 @@ from services.base_meneger import BaseMenager
 class UserMenager(BaseMenager):
     def create(self, **kwargs):
         response = requests.post(
-            url=self.url + "TelegramUser",
+            url=self.url + "Telegram_user",
             headers=self.headers,
             json=kwargs
         )
@@ -13,7 +13,7 @@ class UserMenager(BaseMenager):
 
     def get(self, obj_id):
         response = requests.get(
-            url=self.url+f"TelegramUser?id=eq.{obj_id}",
+            url=self.url+f"Telegram_user?id=eq.{obj_id}",
             headers=self.headers,
         )
         user = response.json()
@@ -24,7 +24,7 @@ class UserMenager(BaseMenager):
 
     def update(self, obj_id, **kwargs):
         requests.patch(
-            url=self.url+f"TelegramUser?id=eq.{obj_id}",
+            url=self.url+f"Telegram_user?id=eq.{obj_id}",
             headers=self.headers,
             json=kwargs
         )

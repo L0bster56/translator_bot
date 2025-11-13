@@ -11,23 +11,25 @@ from services.translate import translate
 
 from services.history import HistoryMenager
 
+from configs import __, _
+
 menager = HistoryMenager()
 
 router = Router()
 
 
-@router.message(F.text == "📚 история")
-async def translate_handler(message: Message):
-    texts = f"История поиска {message.from_user.first_name}:\n\n"
+@router.message(F.text.in_(__("📚 история")) )
+async def translate_handler(message: Message, user: dict):
+    texts = f"{message.from_user.first_name}:\n\n"
     lists = menager.list(user_id=message.from_user.id)
 
     print(lists)
 
     for item in lists:
-        texts += f"{item['src']} → {item['dest']} | {item['text']} = {item['translated_text']}\n"
+        texts += f"{item['src']} → {item['dest']} | {item['text']} = {item['trans_text']}\n"
     if len(lists) <= 0:
         await message.answer(
-            "У вас истории нету"
+            _("У вас истории нету", locale=user.get("lang"))
         )
         return
     await message.answer(texts)
